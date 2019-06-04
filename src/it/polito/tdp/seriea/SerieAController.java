@@ -5,7 +5,14 @@
 package it.polito.tdp.seriea;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import it.polito.tdp.seriea.model.Model;
+import it.polito.tdp.seriea.model.Season;
+import it.polito.tdp.seriea.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +21,8 @@ import javafx.scene.control.TextArea;
 
 public class SerieAController {
 
+	private Model model;
+	
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
 
@@ -21,7 +30,7 @@ public class SerieAController {
     private URL location;
 
     @FXML // fx:id="boxSquadra"
-    private ChoiceBox<?> boxSquadra; // Value injected by FXMLLoader
+    private ChoiceBox<Team> boxSquadra; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnSelezionaSquadra"
     private Button btnSelezionaSquadra; // Value injected by FXMLLoader
@@ -37,7 +46,16 @@ public class SerieAController {
 
     @FXML
     void doSelezionaSquadra(ActionEvent event) {
+    	
+    	txtResult.clear();
+    	Map<Season, Integer> result = this.model.puntiClassifica(this.boxSquadra.getValue());
 
+    	System.out.println("ooo");
+    	for(Season s: result.keySet()) {
+        	System.out.println("dioo");
+    		txtResult.appendText(s.toString());
+    		txtResult.appendText("Stagione: "+s.getSeason()+"  punti: "+result.get(s)+"\n");
+    	}
     }
 
     @FXML
@@ -49,6 +67,11 @@ public class SerieAController {
     void doTrovaCamminoVirtuoso(ActionEvent event) {
 
     }
+    
+    public void setModel(Model model) {
+		this.model = model;
+		this.boxSquadra.getItems().addAll(this.model.squadre());
+	}
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
