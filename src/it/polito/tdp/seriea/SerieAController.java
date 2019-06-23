@@ -48,29 +48,48 @@ public class SerieAController {
     void doSelezionaSquadra(ActionEvent event) {
     	
     	txtResult.clear();
-    	Map<Season, Integer> result = this.model.puntiClassifica(this.boxSquadra.getValue());
-
-    	System.out.println("ooo");
-    	for(Season s: result.keySet()) {
-        	System.out.println("dioo");
-    		txtResult.appendText(s.toString());
-    		txtResult.appendText("Stagione: "+s.getSeason()+"  punti: "+result.get(s)+"\n");
-    	}
+    	Team team = this.boxSquadra.getValue();
+    	
+    	if(team != null) {
+    		
+    		for(String string : model.getPunti(team))
+    			txtResult.appendText(string+"\n");
+    		
+    	} else txtResult.appendText("Seleziona almeno una squadra!");
     }
 
     @FXML
     void doTrovaAnnataOro(ActionEvent event) {
 
+    	txtResult.clear();
+    	Team team = this.boxSquadra.getValue();
+    	
+    	if(team != null) {
+    		
+    		model.creaGrafo(team);
+    		txtResult.appendText(model.annataDoro());
+    		
+    	} else txtResult.appendText("Seleziona almeno una squadra!");
     }
 
     @FXML
     void doTrovaCamminoVirtuoso(ActionEvent event) {
 
+    	txtResult.clear();
+    	Team team = this.boxSquadra.getValue();
+    	
+    	if(team != null) {
+    		
+    		for(Season season : model.trovaCammino())
+    			txtResult.appendText(season.toString() +" con punti : "+model.getPoint(season)+"\n");
+    		
+    	} else txtResult.appendText("Seleziona almeno una squadra!");
+    	
     }
     
     public void setModel(Model model) {
 		this.model = model;
-		this.boxSquadra.getItems().addAll(this.model.squadre());
+		this.boxSquadra.getItems().addAll(model.getSquadre());
 	}
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
